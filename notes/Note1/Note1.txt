@@ -1,0 +1,30 @@
+
+
+
+MONSTER ANIMATION FRAMES:
+- 8 pfs
+[inclusive]
+1-10	: idle
+11		: blank
+12-15: attack
+	12		: prep 
+	13		: attack
+	14-15	: reset
+16		: blank
+17-20	: dogde
+21		: blank
+22-25	: upgrade
+26		: blank
+	
+	
+	
+	
+COLOR:
+
+MONSTER BASE: 4th (D7D7D7)
+MONSTER shade: 6th (B7B7B7)
+MONSTER line: -1th (36
+
+RED		: 93353E
+YELLOW	: CEB882
+BLUE	: 3A5D91
