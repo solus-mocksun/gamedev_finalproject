@@ -10,8 +10,8 @@ M1STATS = {
 	attack_: 10,
 	upgrade_:5,
 	fAttackFrame: 8,
-	fDefendFrame: 13,
-	fUpgradeFrame: 18
+	fDefendFrame: 15,
+	fUpgradeFrame: 20
 }
 
 M2STATS = {

@@ -73,7 +73,7 @@ if (hover_counter >40) {
 	}
 	if(face_index == 2) {
 		draw_set_color(make_color_rgb(206, 184, 130));
-		draw_text_ext(x+25,y-115,"upgrade attack\n"+ 
+		draw_text_ext(x+25,y-105,"upgrade attack\n"+ 
 				string(oMPlayer.attack_score)+" -> "+
 				string(oMPlayer.attack_score+oMPlayer.upgrade_score)+
 				"\nheal: "+string(int64(oMPlayer.upgrade_score/2)),23,200);

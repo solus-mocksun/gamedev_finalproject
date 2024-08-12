@@ -14,8 +14,9 @@ if (image_index>=first_dogde_frame
 	image_index=0;
 }
 //upgrade loop
-if (image_index>=first_upgrade_frame 
-		and image_index<first_upgrade_frame+1){
+//if (image_index>=first_upgrade_frame 
+		//and image_index<first_upgrade_frame+1){
+	if (image_index>=first_upgrade_frame ){
 	show_debug_message("upgrade");
 	image_index=0;
 }
