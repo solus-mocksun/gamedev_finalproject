@@ -39,7 +39,10 @@ switch(state) {
 					ds_list_delete(deck, ds_list_size(deck) - 1);
 					//add that card to the player's hand
 					ds_list_add(opp_hand, _dealt_card);
-		
+					ds_list_add(temp_opp_hand,_dealt_card.image_index);
+					if (_dealt_card.image_index=0)attack_dis++;
+					if (_dealt_card.image_index=1)defend_dis++;
+					if (_dealt_card.image_index=2)upgrade_dis++;
 					//set the card's target position to the hand area
 					_dealt_card.target_x = room_width*.09;
 					_dealt_card.target_y = room_height * 0.17 + ds_list_size(opp_hand) * hand_x_offset;
@@ -65,13 +68,49 @@ switch(state) {
 				_dealt_card.face_up=true;
 				}
 			} else {
+				//HOW COMPUTER CHOOSE CODE AREA
 				randomize();
-				var _temp =irandom_range(0,2);
-				var _opPick = ds_list_find_value(opp_hand,_temp);
+				var _percentage =irandom_range(1,10);
+				var _1out3 =irandom_range(0,2);
+				var _opPick = ds_list_find_value(opp_hand,_1out3);
+
+				var _attackIn = ds_list_find_index(temp_opp_hand,0);
+				var _upgradeIn = ds_list_find_index(temp_opp_hand,2);
+				var _defIn = ds_list_find_index(temp_opp_hand,1);
+				//var _opPick = ds_list_find_value(opp_hand,_temp);
+				if (attack_dis == (num_cards/4)){
+					if (_upgradeIn!=-1){
+						_opPick = ds_list_find_value(opp_hand,_upgradeIn);
+					}
+					else if (_attackIn!=-1){
+						_opPick = ds_list_find_value(opp_hand,_attackIn);
+					}
+				}
+				else if (defend_dis== (num_cards/4)){
+					if (_attackIn!=-1){
+						_opPick = ds_list_find_value(opp_hand,_attackIn);
+					}
+				}
+				//if attack<attack+upgrade*2
+				else if (oMComputer.attack_score <oMComputer.attack_score+(oMComputer.upgrade_score*2)){
+					var _upgradeIn = ds_list_find_index(temp_opp_hand,2);
+					if (_upgradeIn!=-1 and _percentage<8){
+					_opPick = ds_list_find_value(opp_hand,_upgradeIn);
+					}
+				}
+				
+				else if(oMComputer.hp_score<=oMPlayer.attack_score){
+					if (_defIn!=-1 and _percentage<10){
+					_opPick = ds_list_find_value(opp_hand,_upgradeIn);
+					}
+				}
+				
+				//END CODE
 				ds_list_add(opp_selected,_opPick);
-				ds_list_delete(opp_hand,_temp);
+				ds_list_delete(opp_hand,ds_list_find_index(opp_hand,_opPick));
 				_opPick.target_x = room_width*0.3;
 				_opPick.target_y = room_height*0.76;
+				_opPick.isChosen=true;
 				oScore.starterhelp=true;
 				state = STATES.PICK;
 			}
@@ -96,9 +135,9 @@ switch(state) {
 			case 0:
 				oMPlayer.start_attack=true;
 				if (opp_val !=1){
-					oMComputer.takedmg(oMPlayer.attack_score);
+					//oMComputer.takedmg(oMPlayer.attack_score);
 				}else{
-					oScore.block(0,1);
+					//oScore.block(0,1);
 				}
 				break;
 			case 1:
@@ -106,17 +145,17 @@ switch(state) {
 				break;
 			case 2:
 				oMPlayer.start_upgrade=true;
-				oMPlayer.upgrade();
-				oScore.upgrade_start(oMPlayer.upgrade_score,0);
+				//oMPlayer.upgrade();
+				//oScore.upgrade_start(oMPlayer.upgrade_score,0);
 				break;
 		}
 		switch (opp_val){
 			case 0:
 				oMComputer.start_attack=true;
 				if (player_val !=1){
-					oMPlayer.takedmg(oMComputer.attack_score);
+					//oMPlayer.takedmg(oMComputer.attack_score);
 				}else{
-					oScore.block(1,0);
+					//oScore.block(1,0);
 				}
 				break;
 			case 1:
@@ -124,11 +163,11 @@ switch(state) {
 				break;
 			case 2:
 				oMComputer.start_upgrade=true;
-				oMComputer.upgrade();
-				if (player_val !=2)
-					oScore.upgrade_start(0,oMComputer.upgrade_score);
-				else
-					oScore.upgrade_start(oMPlayer.upgrade_score,oMComputer.upgrade_score);
+				//oMComputer.upgrade();
+				//if (player_val !=2)
+					//oScore.upgrade_start(0,oMComputer.upgrade_score);
+				//else
+					//oScore.upgrade_start(oMPlayer.upgrade_score,oMComputer.upgrade_score);
 				break;
 		}
 		//start cleaning up
@@ -143,34 +182,62 @@ switch(state) {
 			var _hand_card = ds_list_find_value(opp_selected, ds_list_size(opp_selected) - 1);
 			_hand_card.face_up=true;
 		}
-	
-		if (oMPlayer.start_attack){
-			oMPlayer.image_index=oMPlayer.first_attack_frame+1;
-			audio_play_sound(sRoar,10,false);
-			oMPlayer.start_attack=false;
-		}if (oMPlayer.start_def){
-			oMPlayer.image_index=oMPlayer.first_dogde_frame+1;
-			audio_play_sound(sRoar,10,false);
-			oMPlayer.start_def=false;
-		}if (oMPlayer.start_upgrade){
-			oMPlayer.image_index=oMPlayer.first_upgrade_frame+1;
-			audio_play_sound(sRoar,10,false);
-			oMPlayer.start_upgrade=false;
-		}if (oMComputer.start_attack){
-			if (!(oMPlayer.image_index > oMPlayer.first_attack_frame and oMPlayer.image_index<oMPlayer.first_dogde_frame)){
-			oMComputer.image_index=oMComputer.first_attack_frame+1;
-			audio_play_sound(sRoar,10,false);
-			oMComputer.start_attack=false;
+		if (clean_up_counter > 170){
+			playerwasdef=false;
+			playerwasup=false;
+			if (oMPlayer.start_attack){
+				oMPlayer.image_index=oMPlayer.first_attack_frame+1;
+				audio_play_sound(sRoar,10,false);
+				oMPlayer.start_attack=false;
+				
+				if (oMComputer.start_def==false){
+					oMComputer.takedmg(oMPlayer.attack_score);
+				}else{
+					oScore.block(0,1);
+					oMPlayer.takedmg(oMPlayer.attack_score/2);
+				}
+			}if (oMPlayer.start_def){
+				oMPlayer.image_index=oMPlayer.first_dogde_frame+1;
+				audio_play_sound(sRoar,10,false);
+				playerwasdef=true;
+				oMPlayer.start_def=false;
+			}if (oMPlayer.start_upgrade){
+				oMPlayer.image_index=oMPlayer.first_upgrade_frame+1;
+				audio_play_sound(sRoar,10,false);
+				oMPlayer.start_upgrade=false;
+				playerwasup=true;
+				oMPlayer.upgrade();
+				oScore.upgrade_start(oMPlayer.upgrade_score,0);
+				
+				
+			}if (oMComputer.start_attack){
+				if (!(oMPlayer.image_index > oMPlayer.first_attack_frame and oMPlayer.image_index<oMPlayer.first_dogde_frame)){
+				oMComputer.image_index=oMComputer.first_attack_frame+1;
+				audio_play_sound(sRoar,10,false);
+				oMComputer.start_attack=false;
+				if (playerwasdef=false){
+					oMPlayer.takedmg(oMComputer.attack_score);
+				}else{
+					oScore.block(1,0);
+					oMComputer.takedmg(oMComputer.attack_score/2);
+				}
+				}
+			}if (oMComputer.start_def){
+				oMComputer.image_index=oMComputer.first_dogde_frame+1;
+				oMComputer.start_def=false;
+			}if (oMComputer.start_upgrade){
+				oMComputer.image_index=oMComputer.first_upgrade_frame+1;
+				oMComputer.start_upgrade=false;
+				
+				oMComputer.upgrade();
+				if (playerwasup=false)
+					oScore.upgrade_start(0,oMComputer.upgrade_score);
+				else
+					oScore.upgrade_start(oMPlayer.upgrade_score,oMComputer.upgrade_score);
 			}
-		}if (oMComputer.start_def){
-			oMComputer.image_index=oMComputer.first_dogde_frame+1;
-			oMComputer.start_def=false;
-		}if (oMComputer.start_upgrade){
-			oMComputer.image_index=oMComputer.first_upgrade_frame+1;
-			oMComputer.start_upgrade=false;
 		}
 	}
-	if (clean_up_counter>100){
+	if (clean_up_counter>200){
 	if (move_timer==0){
 		if (ds_list_size(opp_selected)>0){
 			//get the last card
@@ -185,6 +252,8 @@ switch(state) {
 			_hand_card.target_y = room_height*0.9-ds_list_size(discard)*1;
 			_hand_card.target_depth=-ds_list_size(discard);
 			_hand_card.face_up=true;
+			_hand_card.isChosen=false;
+			
 		}
 		else if (ds_list_size(player_selected)>0){
 			//get the last card
@@ -199,6 +268,10 @@ switch(state) {
 			_hand_card.target_y = room_height*0.9-ds_list_size(discard)*1;
 			_hand_card.target_depth=-ds_list_size(discard);
 			_hand_card.face_up=true;
+			_hand_card.isChosen=false;
+			if (_hand_card.image_index=0)attack_dis++;
+			if (_hand_card.image_index=1)defend_dis++;
+			if (_hand_card.image_index=2)upgrade_dis++;
 		}
 		else if (ds_list_size(opp_hand)>0){
 			//get the last card
@@ -213,6 +286,7 @@ switch(state) {
 			_hand_card.target_y = room_height*0.9-ds_list_size(discard)*1;
 			_hand_card.target_depth=-ds_list_size(discard);
 			_hand_card.face_up=true;
+			_hand_card.isChosen=false;
 		}
 		else if (ds_list_size(player_hand)>0){
 			//get the last card
@@ -229,6 +303,10 @@ switch(state) {
 			_hand_card.target_depth=-ds_list_size(discard);
 			_hand_card.in_player_hand = false;
 			_hand_card.face_up=true;
+			_hand_card.isChosen=false;
+			if (_hand_card.image_index=0)attack_dis++;
+			if (_hand_card.image_index=1)defend_dis++;
+			if (_hand_card.image_index=2)upgrade_dis++;
 		}else{
 			ds_list_clear(player_selected);
 			ds_list_clear(player_hand);
@@ -246,6 +324,10 @@ switch(state) {
 		//take the last discard and move it to the deck
 		//if there's no more cards in the discard, shuffle the deck
 		//state = deal
+		attack_dis=0;
+		upgrade_dis=0;
+		defend_dis=0;
+		
 		var _player_dis = ds_list_size(discard);
 		if (_player_dis>0){
 			var _hand_card = ds_list_find_value(discard, ds_list_size(discard) - 1);

@@ -19,7 +19,7 @@ if(oCardMan.state == STATES.PICK)  {
 				hover=false;
 				start_fade = true;
 				oScore.starterhelp_firsttime=false;
-
+				isChosen=true;
 			}
 			else if (position_meeting(mouse_x-30, mouse_y, id)){
 					target_x = room_width*0.88;
@@ -38,7 +38,24 @@ if(oCardMan.state == STATES.PICK)  {
 	}
 }
 
+if (oCardMan.state == STATES.CLEANUP){
+moveSpeed=0.3;
+	dotrickincomparecounter++;
+	if (dotrickincomparecounter>120 and dotrickincomparecounter<180){
+		if (isChosen){
+			target_y=room_height*0.5;
+			moveSpeed=0.2;
+			if (y==room_height*0.5)
+			dotrickincomparealpha-=0.05;
+		}
+	}
 
+	
+}else{
+	dotrickincomparecounter=0;
+	dotrickincomparealpha=1;
+	moveSpeed=.3;
+}
 
 
 

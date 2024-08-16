@@ -96,10 +96,10 @@ if (blocking){
 	if (block_counter>20){
 	var coll=make_color_rgb(58, 93, 145);
 	if (block_p){
-		draw_text_color(room_width*0.60,room_height*0.3,"BLOCKED",coll,coll,coll,coll,fade_alpha_block);
+		draw_text_color(room_width*0.60,room_height*0.3,"DEFLECTED",coll,coll,coll,coll,fade_alpha_block);
 	}
 	if (block_c){
-		draw_text_color(room_width*0.4,room_height*0.3,"BLOCKED",coll,coll,coll,coll,fade_alpha_block);
+		draw_text_color(room_width*0.4,room_height*0.3,"DEFLECTED",coll,coll,coll,coll,fade_alpha_block);
 	}
 	
 	if (fade_alpha_block<=0){

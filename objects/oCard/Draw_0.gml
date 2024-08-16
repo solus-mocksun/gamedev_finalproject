@@ -2,7 +2,7 @@
 //if the card is farther than 1 from its target
 if(abs(x - target_x) > 1) {
 	depth = -200;
-	x = lerp(x, target_x, .3);
+	x = lerp(x, target_x, moveSpeed);
 } else {
 	//set its x to the target as well as the depth
 	x = target_x;
@@ -12,7 +12,7 @@ if(abs(x - target_x) > 1) {
 //if the card is farther than 1 from its target
 if(abs(y - target_y) > 1) {
 	depth = -200;
-	y = lerp(y, target_y, .3);
+	y = lerp(y, target_y, moveSpeed);
 	if (moveSound and !hover){
 		audio_play_sound(sCard,10,false); 
 		moveSound = false;
@@ -46,7 +46,7 @@ if(!face_up){
 	}
 	//draw the card
 
-	draw_sprite(sprite_index, image_index, x, y);
+	draw_sprite_ext(sprite_index, image_index, x, y,image_xscale,image_yscale,image_angle, image_blend, dotrickincomparealpha);
 
 
 if (hover_counter >40) {
@@ -69,7 +69,7 @@ if (hover_counter >40) {
 	}
 	if(face_index == 1) {
 		draw_set_color(make_color_rgb(58, 93, 145));
-		draw_text(x+35,y-90,"block enemy\nattack");
+		draw_text(x+35,y-100,"deflect 50% of\nenemy attack");
 	}
 	if(face_index == 2) {
 		draw_set_color(make_color_rgb(206, 184, 130));

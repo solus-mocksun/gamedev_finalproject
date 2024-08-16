@@ -36,6 +36,7 @@ move_timer = 0;
 deck = ds_list_create();
 player_hand = ds_list_create();
 opp_hand = ds_list_create();
+temp_opp_hand = ds_list_create();
 player_selected = ds_list_create();
 opp_selected= ds_list_create();
 discard = ds_list_create();
@@ -86,3 +87,10 @@ player_score=0;
 opp_score=0;
 target_player_score=false;
 target_opp_score=false;
+
+dotrickincomparecounter=0;
+
+//computer calculate:
+attack_dis=0;
+upgrade_dis=0;
+defend_dis=0;
