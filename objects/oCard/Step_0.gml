@@ -2,7 +2,7 @@
 // You can write your code in this editor
 //in_player_hand = is_undefined(ds_list_find_index(oCardMan.player_hand,id));
 //the manager is in the picking state
-if(oCardMan.state == STATES.PICK) {
+if(oCardMan.state == STATES.PICK)  {
 	//if the player has not yet selected two cards
 	if(ds_list_size(oCardMan.player_selected) < 1) {
 		//and if the card is in the player's hand and is not face up

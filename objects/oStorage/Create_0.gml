@@ -18,9 +18,9 @@ M2STATS = {
 	hp_: 30,
 	attack_: 2,
 	upgrade_:8,
-	fAttackFrame: 10,
-	fDefendFrame: 15,
-	fUpgradeFrame: 20
+	fAttackFrame: 4,
+	fDefendFrame: 10,
+	fUpgradeFrame: 15
 }
 
 setupEnd=false;
